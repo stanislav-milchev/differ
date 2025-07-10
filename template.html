@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>JSON Side-by-Side Diff</title>
+  <style>
+    body { font-family: monospace; margin: 20px; }
+    h1 { text-align: center; }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .json-container {
+      width: 45%;
+      border: 1px solid #ccc;
+      padding: 15px;
+      overflow: auto;
+      max-height: 80vh;
+      background: #f9f9f9;
+      box-sizing: border-box;
+      border-radius: 6px;
+    }
+    .json-object, .json-array {
+      margin-left: 20px;
+    }
+    .json-list {
+      list-style-type: none;
+      padding-left: 15px;
+      margin: 0;
+    }
+    .json-key {
+      margin: 2px 0;
+    }
+    .json-key.added {
+      background-color: #d4edda; /* green */
+      border-left: 4px solid #28a745;
+      padding-left: 6px;
+    }
+    .json-key.removed {
+      background-color: #f8d7da; /* red */
+      border-left: 4px solid #dc3545;
+      padding-left: 6px;
+    }
+    .json-key.changed {
+      background-color: #fff3cd; /* yellow */
+      border-left: 4px solid #ffc107;
+      padding-left: 6px;
+    }
+    .key {
+      color: #555;
+    }
+    .json-string {
+      color: #0b7500;
+    }
+    .json-number {
+      color: #005cc5;
+    }
+    .json-bool {
+      color: #d73a49;
+      font-weight: bold;
+    }
+    .json-null {
+      color: #6a737d;
+      font-style: italic;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 20px auto;
+      font-family: monospace;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eee;
+    }
+    tr.added {
+      background: #d4edda;
+    }
+    tr.removed {
+      background: #f8d7da;
+    }
+    tr.update {
+      background: #fff3cd;
+    }
+    caption {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>JSON Side-by-Side Diff</h1>
+
+  <div class="container">
+    <div class="json-container">
+      <h2>Original</h2>
+      {{ renderJSON .Original "" }}
+    </div>
+    <div class="json-container">
+      <h2>Modified</h2>
+      {{ renderJSON .Modified "" }}
+    </div>
+  </div>
+
+  <table>
+    <caption>Detailed Diff Table</caption>
+    <thead>
+      <tr><th>JSON Path</th><th>Change Type</th><th>From</th><th>To</th></tr>
+    </thead>
+    <tbody>
+      {{range .Diffs}}
+      <tr class="{{if eq .Type "create"}}added{{else if eq .Type "delete"}}removed{{else if eq .Type "update"}}update{{end}}">
+        <td>{{.Path}}</td>
+        <td>{{.Type}}</td>
+        <td>{{.From}}</td>
+        <td>{{.To}}</td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</body>
+</html>
